@@ -99,7 +99,14 @@ public class MSButton {
     public void mousePressed () {
 
         clicked = true;
-        //your code here
+
+        if(keyPressed) {
+
+            marked = !marked;
+            if(marked == false)
+                clicked = false;
+            else if()
+        }
 
     }
 
@@ -128,7 +135,9 @@ public class MSButton {
 
     public boolean isValid(int r, int c) {
 
-        //your code here
+        if(r >= 0 && r < NUM_ROWS && c >= 0 && c < NUM_COLS)
+            return true;
+
         return false;
 
     }
@@ -136,7 +145,15 @@ public class MSButton {
     public int countBombs(int row, int col) {
 
         int numBombs = 0;
-        //your code here
+
+        for(int i = row - 1; i < row + 1; i++)
+
+            for(int j = col - 1; j < col + 1; j++)
+
+                if(isValid(i, j) && bombs.contains(buttons[i][j]))
+
+                    numBombs++;
+
         return numBombs;
 
     }
