@@ -103,10 +103,30 @@ public class MSButton {
         if(keyPressed) {
 
             marked = !marked;
+
             if(marked == false)
+
                 clicked = false;
-           // else if()
-        }
+
+            else if(bombs.contains(buttons[r][c]))
+
+                text("you lose",200, 200);
+
+            else if(countBombs(r, c) > 0)
+
+                label = label + countBombs(r, c);
+            
+            else {
+
+                for(int i = r - 1; i < r + 1; i++)
+
+                    for(int j = c - 1; j < c + 1; j++)
+
+                        if(isValid(i, j) && !bombs.contains(buttons[i][j]))
+
+                            buttons[i][j].mousePressed();
+            }
+        }        
 
     }
 
