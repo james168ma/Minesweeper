@@ -1,8 +1,11 @@
 
 
 import de.bezier.guido.*;
-int NUM_ROWS = 6;
-int NUM_COLS = 6;
+int NUM_ROWS = 20;
+int NUM_COLS = 20;
+int NUM_BOMBS = NUM_ROWS*NUM_COLS/40;
+String winMessage = new String("YOU WIN!!");
+String loseMessage = new String("YOU LOSE");
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs = new ArrayList <MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 
@@ -14,7 +17,7 @@ void setup () {
     // make the manager
     Interactive.make( this );
     
-    buttons = new MSButton[20][20];
+    buttons = new MSButton[NUM_ROWS][NUM_COLS];
     
     for(int row = 0; row < buttons.length; row++)
 
@@ -22,16 +25,24 @@ void setup () {
 
             buttons[row][col] = new MSButton(row, col);
     
-    setBombs();
+    setBombs(NUM_BOMBS);
 }
 
-public void setBombs() {
+public void setBombs(int nBombs) {
 
-    int ranRow = (int)(((double)NUM_ROWS)*Math.random());
-    int ranCol = (int)(((double)NUM_COLS)*Math.random());
+    int i = 0;
 
-    if(!bombs.contains(buttons[ranRow][ranCol])) {
-        bombs.add(buttons[ranRow][ranCol]);
+    while (i < nBombs) {
+
+        int ranRow = (int)(((double)NUM_ROWS)*Math.random());
+        int ranCol = (int)(((double)NUM_COLS)*Math.random());
+
+        if(!bombs.contains(buttons[ranRow][ranCol])) {
+
+            bombs.add(buttons[ranRow][ranCol]);
+
+            i++;
+        }
     }
 }
 
@@ -45,21 +56,36 @@ public void draw () {
 
 public boolean isWon() {
 
-    //your code here
+    int nBombsMarked = 0;
+
+    for(int i = 0; i < bombs.size(); i++) {
+
+        if(bombs.get(i).isMarked()) {
+
+            nBombsMarked++;
+
+            if(nBombsMarked == NUM_BOMBS)
+
+                return true;
+        }
+    }
+
     return false;
 
 }
 
 public void displayLosingMessage() {
 
-    //your code here
+    for(int i = 0; i < loseMessage.length(); i++)
 
+        buttons[NUM_ROWS/2][NUM_COLS/2 - loseMessage.length()/2 + i].setLabel(loseMessage.substring(i, i+1));
 }
 
 public void displayWinningMessage() {
 
-    //your code here
+    for(int i = 0; i < winMessage.length(); i++)
 
+        buttons[NUM_ROWS/2][NUM_COLS/2 - winMessage.length()/2 + i].setLabel(winMessage.substring(i, i+1));
 }
 
 public class MSButton {
@@ -107,27 +133,27 @@ public class MSButton {
             if(marked == false)
 
                 clicked = false;
+        }
 
-            else if(bombs.contains(buttons[r][c]))
+        else if(bombs.contains(this))
 
-                text("you lose",200, 200);
+            displayLosingMessage();
 
-            else if(countBombs(r, c) > 0)
+        else if(countBombs(r, c) > 0)
 
-                label = label + countBombs(r, c);
+            label = "" + countBombs(r, c);
             
-            else {
+        else {
 
-                for(int i = r - 1; i < r + 1; i++)
+            for(int i = r - 1; i <= r + 1; i++)
 
-                    for(int j = c - 1; j < c + 1; j++)
+                for(int j = c - 1; j <= c + 1; j++)
 
-                        if(isValid(i, j) && !bombs.contains(buttons[i][j]))
+                    if(isValid(i, j) && !bombs.contains(buttons[i][j]) && buttons[i][j] != this && buttons[i][j].isClicked() == false) 
 
-                            buttons[i][j].mousePressed();
-            }
-        }        
-
+                        buttons[i][j].mousePressed();
+        }
+                
     }
 
     public void draw () {
@@ -153,9 +179,9 @@ public class MSButton {
 
     }
 
-    public boolean isValid(int r, int c) {
+    public boolean isValid(int row, int col) {
 
-        if(r >= 0 && r < NUM_ROWS && c >= 0 && c < NUM_COLS)
+        if(row >= 0 && row < NUM_ROWS && col >= 0 && col < NUM_COLS)
             return true;
 
         return false;
@@ -166,9 +192,9 @@ public class MSButton {
 
         int numBombs = 0;
 
-        for(int i = row - 1; i < row + 1; i++)
+        for(int i = row - 1; i <= row + 1; i++)
 
-            for(int j = col - 1; j < col + 1; j++)
+            for(int j = col - 1; j <= col + 1; j++)
 
                 if(isValid(i, j) && bombs.contains(buttons[i][j]))
 
