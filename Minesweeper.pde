@@ -57,21 +57,28 @@ public void draw () {
 public boolean isWon() {
 
     int nBombsMarked = 0;
+    int tilesMarked = 0;
 
-    for(int i = 0; i < bombs.size(); i++) {
+    for(int i = 0; i < bombs.size(); i++)
 
-        if(bombs.get(i).isMarked()) {
+        if(bombs.get(i).isMarked())
 
             nBombsMarked++;
 
-            if(nBombsMarked == NUM_BOMBS)
+    for(MSButton[] row: buttons)
 
-                return true;
-        }
-    }
+        for(MSButton col: row)
+
+            if(col.isMarked())
+
+                tilesMarked++;
+
+    if(nBombsMarked == NUM_BOMBS && tilesMarked == NUM_BOMBS)
+
+        return true;
+
 
     return false;
-
 }
 
 public void displayLosingMessage() {
