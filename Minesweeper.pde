@@ -1,9 +1,9 @@
 
 
 import de.bezier.guido.*;
-int NUM_ROWS = 20;
-int NUM_COLS = 20;
-int NUM_BOMBS = NUM_ROWS*NUM_COLS/40;
+public final static int NUM_ROWS = 20;
+public final static int NUM_COLS = 20;
+public final static int NUM_BOMBS = NUM_ROWS*NUM_COLS/40;
 String winMessage = new String("YOU WIN!!");
 String loseMessage = new String("YOU LOSE");
 private MSButton[][] buttons; //2d array of minesweeper buttons
